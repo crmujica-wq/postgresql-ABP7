@@ -23,7 +23,7 @@
       "name": "2. POST - Crear usuario",
       "event": [
         { "listen": "prerequest", "script": { "exec": [
-          "pm.collectionVariables.set('testEmail', `postman.${Date.now()}@example.com`);"
+          "pm.collectionVariables.set('testEmail', `postman.${Date.now()}@gmail.com`);"
         ] } },
         { "listen": "test", "script": { "exec": [
           "pm.test('Estado 201', () => pm.response.to.have.status(201));",
@@ -33,7 +33,7 @@
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Usuario Postman\",\n  \"email\": \"{{testEmail}}\"\n}" },
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Laura Martínez\",\n  \"email\": \"{{testEmail}}\"\n}" },
         "url": "{{baseUrl}}/usuarios"
       }
     },
@@ -42,7 +42,7 @@
       "request": {
         "method": "PUT",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Usuario Postman Actualizado\"\n}" },
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Laura Martínez\",\n  \"email\": \"{{testEmail}}\"\n}" },
         "url": "{{baseUrl}}/usuarios/{{createdUserId}}"
       },
       "event": [{ "listen": "test", "script": { "exec": ["pm.test('Estado 200', () => pm.response.to.have.status(200));"] } }]
@@ -81,7 +81,7 @@
     {
       "name": "8. POST - Transacción exitosa",
       "event": [
-        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('txEmail', `transaccion.${Date.now()}@example.com`);"] } },
+        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('txEmail', `transaccion.${Date.now()}@gmail.com`);"] } },
         { "listen": "test", "script": { "exec": [
           "pm.test('Estado 201', () => pm.response.to.have.status(201));",
           "pm.collectionVariables.set('transactionUserId', pm.response.json().data.id);"
@@ -90,14 +90,14 @@
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Transacción Correcta\",\n  \"email\": \"{{txEmail}}\"\n}" },
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Priscila Olguín\",\n  \"email\": \"priscila@gmail.com\"\n}" },
         "url": "{{baseUrl}}/usuarios/transaccion"
       }
     },
     {
       "name": "9. POST - Rollback forzado",
       "event": [
-        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('rollbackEmail', `rollback.${Date.now()}@example.com`);"] } },
+        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('rollbackEmail', `rollback.${Date.now()}@gmail.com`);"] } },
         { "listen": "test", "script": { "exec": [
           "pm.test('Estado 409 controlado', () => pm.response.to.have.status(409));",
           "pm.test('Rollback confirmado', () => pm.expect(pm.response.json().message).to.include('revertida'));"
@@ -106,7 +106,7 @@
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Rollback Demo\",\n  \"email\": \"{{rollbackEmail}}\",\n  \"forceError\": true\n}" },
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Valentina Silva\",\n  \"email\": \"{{rollbackEmail}}\",\n  \"forceError\": true\n}" },
         "url": "{{baseUrl}}/usuarios/transaccion"
       }
     },
@@ -122,3 +122,4 @@
     }
   ]
 }
+

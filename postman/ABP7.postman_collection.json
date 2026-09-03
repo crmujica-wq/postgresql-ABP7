@@ -90,7 +90,7 @@
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Priscila Olguín\",\n  \"email\": \"priscila@gmail.com\"\n}" },
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Priscila Olguín\",\n  \"email\": \"{{txEmail}}\"\n}" },
         "url": "{{baseUrl}}/usuarios/transaccion"
       }
     },

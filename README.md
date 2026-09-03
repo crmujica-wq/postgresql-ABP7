@@ -42,5 +42,7 @@ Para demostrar el funcionamiento del rollback, se debe realizar una solicitud PO
 http://localhost:5000/usuarios/transaccion
 La solicitud debe contener los siguientes datos:
 Nombre: Valentina Silva
-Correo electrónico: rollback.demo@gmail.com
+Correo electrónico: valentinasilva@gmail.com
 Forzar error: verdadero
+
+

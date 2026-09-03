@@ -21,21 +21,27 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 INSERT INTO users (name, email) VALUES
-('Usuario Uno', 'usuario1@example.com'),
-('Usuario Dos', 'usuario2@example.com'),
-('Usuario Tres', 'usuario3@example.com'),
-('Usuario Cuatro', 'usuario4@example.com'),
-('Usuario Cinco', 'usuario5@example.com')
+('Juan Pérez', 'juan.perez@gmail.com'),
+('María González', 'maria.gonzalez@gmail.com'),
+('Diego Soto', 'diego.soto@gmail.com'),
+('Camila Herrera', 'camila.herrera@gmail.com'),
+('Felipe Morales', 'felipe.morales@gmail.com')
+ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO users (name, email) VALUES
+('Oscar Rojas', 'oscarrojas@gmail.com'),
+('Priscila Olguín', 'priscila@gmail.com'),
+('Valentina Silva', 'valentina.silva@gmail.com')
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO orders (user_id, product, amount)
 SELECT id, 'Teclado mecánico', 54990 FROM users
-WHERE email = 'usuario1@example.com'
+WHERE email = 'juan.perez@gmail.com'
   AND NOT EXISTS (SELECT 1 FROM orders WHERE product = 'Teclado mecánico');
 
 INSERT INTO orders (user_id, product, amount)
 SELECT id, 'Mouse inalámbrico', 24990 FROM users
-WHERE email = 'usuario1@example.com'
+WHERE email = 'juan.perez@gmail.com'
   AND NOT EXISTS (SELECT 1 FROM orders WHERE product = 'Mouse inalámbrico');
 
 SELECT id, name, email, created_at FROM users ORDER BY id;

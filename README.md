@@ -41,6 +41,6 @@ DEMOSTRACIÓN DE ROLLBACK
 Para demostrar el funcionamiento del rollback, se debe realizar una solicitud POST a la ruta:
 http://localhost:5000/usuarios/transaccion
 La solicitud debe contener los siguientes datos:
-Nombre: Rollback Demo
-Correo electrónico: rollback.demo@example.com
+Nombre: Valentina Silva
+Correo electrónico: rollback.demo@gmail.com
 Forzar error: verdadero

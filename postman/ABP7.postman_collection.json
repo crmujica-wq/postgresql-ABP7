@@ -23,7 +23,7 @@
       "name": "2. POST - Crear usuario",
       "event": [
         { "listen": "prerequest", "script": { "exec": [
-          "pm.collectionVariables.set('testEmail', `postman.${Date.now()}@gmail.com`);"
+          "pm.collectionVariables.set('testEmail', `lauramartinez${Date.now()}@gmail.com`);"
         ] } },
         { "listen": "test", "script": { "exec": [
           "pm.test('Estado 201', () => pm.response.to.have.status(201));",
@@ -81,7 +81,7 @@
     {
       "name": "8. POST - Transacción exitosa",
       "event": [
-        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('txEmail', `transaccion.${Date.now()}@gmail.com`);"] } },
+        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('txEmail', `priscila${Date.now()}@gmail.com`);"] } },
         { "listen": "test", "script": { "exec": [
           "pm.test('Estado 201', () => pm.response.to.have.status(201));",
           "pm.collectionVariables.set('transactionUserId', pm.response.json().data.id);"
@@ -97,7 +97,7 @@
     {
       "name": "9. POST - Rollback forzado",
       "event": [
-        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('rollbackEmail', `rollback.${Date.now()}@gmail.com`);"] } },
+        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('rollbackEmail', `valentinasilva${Date.now()}@gmail.com`);"] } },
         { "listen": "test", "script": { "exec": [
           "pm.test('Estado 409 controlado', () => pm.response.to.have.status(409));",
           "pm.test('Rollback confirmado', () => pm.expect(pm.response.json().message).to.include('revertida'));"
@@ -122,4 +122,5 @@
     }
   ]
 }
+
 

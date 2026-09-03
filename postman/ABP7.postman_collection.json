@@ -1,0 +1,124 @@
+{
+  "info": {
+    "_postman_id": "abp7-crud-postgresql-sequelize",
+    "name": "ABP7 - PostgreSQL CRUD y ORM",
+    "description": "CRUD completo, transacción con rollback, comparación SQL/ORM y relación Usuario-Pedidos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "createdUserId", "value": "" },
+    { "key": "transactionUserId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. GET - Listar usuarios",
+      "request": { "method": "GET", "url": "{{baseUrl}}/usuarios" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+        "pm.test('Existen al menos 3 usuarios', () => pm.expect(pm.response.json().count).to.be.at.least(3));"
+      ] } }]
+    },
+    {
+      "name": "2. POST - Crear usuario",
+      "event": [
+        { "listen": "prerequest", "script": { "exec": [
+          "pm.collectionVariables.set('testEmail', `postman.${Date.now()}@example.com`);"
+        ] } },
+        { "listen": "test", "script": { "exec": [
+          "pm.test('Estado 201', () => pm.response.to.have.status(201));",
+          "pm.collectionVariables.set('createdUserId', pm.response.json().data.id);"
+        ] } }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Usuario Postman\",\n  \"email\": \"{{testEmail}}\"\n}" },
+        "url": "{{baseUrl}}/usuarios"
+      }
+    },
+    {
+      "name": "3. PUT - Actualizar usuario",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Usuario Postman Actualizado\"\n}" },
+        "url": "{{baseUrl}}/usuarios/{{createdUserId}}"
+      },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Estado 200', () => pm.response.to.have.status(200));"] } }]
+    },
+    {
+      "name": "4. POST - Crear pedido relacionado",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"product\": \"Curso Node\",\n  \"amount\": 39990\n}" },
+        "url": "{{baseUrl}}/usuarios/{{createdUserId}}/pedidos"
+      },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Estado 201', () => pm.response.to.have.status(201));"] } }]
+    },
+    {
+      "name": "5. GET - Usuario con pedidos (include)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/usuarios/{{createdUserId}}/pedidos" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+        "pm.test('Pedidos anidados', () => pm.expect(pm.response.json().pedidos).to.be.an('array').that.is.not.empty);"
+      ] } }]
+    },
+    {
+      "name": "6. GET - Usuarios con Sequelize ORM",
+      "request": { "method": "GET", "url": "{{baseUrl}}/usuarios/orm" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Estado 200', () => pm.response.to.have.status(200));"] } }]
+    },
+    {
+      "name": "7. GET - Comparar SQL y ORM",
+      "request": { "method": "GET", "url": "{{baseUrl}}/usuarios/comparacion" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+        "pm.test('Misma cantidad', () => { const j = pm.response.json(); pm.expect(j.sql.count).to.eql(j.orm.count); });"
+      ] } }]
+    },
+    {
+      "name": "8. POST - Transacción exitosa",
+      "event": [
+        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('txEmail', `transaccion.${Date.now()}@example.com`);"] } },
+        { "listen": "test", "script": { "exec": [
+          "pm.test('Estado 201', () => pm.response.to.have.status(201));",
+          "pm.collectionVariables.set('transactionUserId', pm.response.json().data.id);"
+        ] } }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Transacción Correcta\",\n  \"email\": \"{{txEmail}}\"\n}" },
+        "url": "{{baseUrl}}/usuarios/transaccion"
+      }
+    },
+    {
+      "name": "9. POST - Rollback forzado",
+      "event": [
+        { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('rollbackEmail', `rollback.${Date.now()}@example.com`);"] } },
+        { "listen": "test", "script": { "exec": [
+          "pm.test('Estado 409 controlado', () => pm.response.to.have.status(409));",
+          "pm.test('Rollback confirmado', () => pm.expect(pm.response.json().message).to.include('revertida'));"
+        ] } }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Rollback Demo\",\n  \"email\": \"{{rollbackEmail}}\",\n  \"forceError\": true\n}" },
+        "url": "{{baseUrl}}/usuarios/transaccion"
+      }
+    },
+    {
+      "name": "10. DELETE - Eliminar usuario",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/usuarios/{{createdUserId}}" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Estado 200', () => pm.response.to.have.status(200));"] } }]
+    },
+    {
+      "name": "11. DELETE - Limpiar usuario transacción",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/usuarios/{{transactionUserId}}" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('Estado 200', () => pm.response.to.have.status(200));"] } }]
+    }
+  ]
+}
